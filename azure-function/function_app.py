@@ -33,6 +33,8 @@ def visitors(req: func.HttpRequest, container: cosmos.ContainerProxy):
         response = get_visitor_count()
     elif req.method == "POST":
         response = increment_visitor_count()
+    else:
+        return func.HttpResponse(status_code=405)
 
     return func.HttpResponse(
         json.dumps(response),
