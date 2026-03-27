@@ -40,7 +40,7 @@ module edge './modules/edge.bicep' = {
     customDomainResourceName: edgeCustomDomainResourceName
     dnsZoneName: dnsZoneName
     frontDoorName: frontDoorName
-    storageEndpoint: staticSite.outputs.staticEndpoint
+    storageEndpoint: staticSite.outputs.staticSiteEndpoint
   }
 }
 

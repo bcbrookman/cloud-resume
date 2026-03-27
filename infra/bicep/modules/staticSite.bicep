@@ -145,5 +145,4 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
   }
 }
 
-output name string = storageAccount.name
-output staticEndpoint string = storageAccount.properties.primaryEndpoints.web
+output staticSiteEndpoint string = storageAccount.properties.primaryEndpoints.web

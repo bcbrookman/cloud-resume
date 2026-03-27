@@ -1,5 +1,5 @@
 {
-    "azureFunctions.deploySubpath": "azure-function",
+    "azureFunctions.deploySubpath": "app/api",
     "azureFunctions.scmDoBuildDuringDeployment": true,
     "azureFunctions.pythonVenv": "../.venv",
     "azureFunctions.projectLanguage": "Python",
