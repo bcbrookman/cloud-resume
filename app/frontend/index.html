@@ -4,80 +4,190 @@
     <title>Resume - Brian Brookman</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
-<body style="background-color: lightgrey;">
-    <div style="background-color: white; color: black; max-width: 900px; margin: 2em auto; padding: 2em; box-shadow: 5px 5px 10px rgba(0,0,0,0.2);">
-
-        <!-- Header -->
+<body>
+    <div id="resume-container">
         <header>
-            <h1 style="font-size: 2em; color: darkblue;">Brian Brookman</h1>
-            <ul style="list-style: none; border-bottom: 3px solid darkblue; padding-bottom: 1em; padding-left: 0px;">
-                <li style="display: inline;"><a href="https://www.bcbrookman.com/">Website</a></li><span> | </span>
-                <li style="display: inline;"><a href="https://linkedin.com/in/bcbrookman">LinkedIn</a></li><span> | </span>
-                <li style="display: inline;"><a href="https://github.com/bcbrookman">GitHub</a></li>
+            <h1>Brian Brookman</h1>
+            <ul>
+                <li><a href="https://github.com/bcbrookman" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--tabler" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" data-icon="tabler:brand-github"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2c2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2a4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6c-.6.6-.6 1.2-.5 2V21"></path></svg>
+                    <ins>bcbrookman</ins>
+                </a></li>
+                <li><a href="https://www.linkedin.com/in/bcbrookman/" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--tabler" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" data-icon="tabler:brand-linkedin"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 11v5m0-8v.01M12 16v-5m4 5v-3a2 2 0 1 0-4 0"></path><path d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"></path></g></svg>
+                    <ins>bcbrookman</ins>
+                </a></li>
+                <li><a href="https://www.linkedin.com/in/bcbrookman/" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--charm" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16" data-icon="charm:person"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="8" cy="6" r="3.25"></circle><path d="m2.75 14.25c0-2.5 2-5 5.25-5s5.25 2.5 5.25 5"></path></g></svg>
+                    <ins>www.bcbrookman.com</ins>
+                </a></li>
             </ul>
         </header>
-
-        <!-- Summary -->
-        <section>
-            <h2 style="font-size: 1.3em; color: darkblue; border-bottom: 1px solid darkblue;">Summary</h2>
-            <p>I'm an experienced IT engineer who specializes in networking, cloud, and Kubernetes.</p>
+        <section id="summary">
+            <h2>Summary</h2>
+            <p>Experienced IT professional with a strong background in infrastructure, networking, and cloud native platforms. Skilled in designing, deploying, and supporting scalable systems with a focus on automation, system reliability, security, and operational efficiency. An analytical thinker and knowledgeable technical resource with a proven track record of leading by example, improving internal processes, and fostering collaboration.</p>
         </section>
-
-        <!-- Skills -->
-        <section>
-            <h2 style="font-size: 1.3em; color: darkblue; border-bottom: 1px solid darkblue;">Skills</h2>
-            <ul style="list-style: none; padding-left: 0px;">
-                <li style="display: inline; background-color: lightblue; border-radius: 20px; padding: 0.5em;">Microsoft Azure</li>
-                <li style="display: inline; background-color: lightblue; border-radius: 20px; padding: 0.5em;">Cloud Computing</li>
-                <li style="display: inline; background-color: lightblue; border-radius: 20px; padding: 0.5em;">Networking</li>
-                <li style="display: inline; background-color: lightblue; border-radius: 20px; padding: 0.5em;">DevOps</li>
-                <li style="display: inline; background-color: lightblue; border-radius: 20px; padding: 0.5em;">Kubernetes</li>
-                <li style="display: inline; background-color: lightblue; border-radius: 20px; padding: 0.5em;">Troubleshooting</li>
-            </ul>
-        </section>
-
-        <!-- Projects -->
-        <section>
-            <h2 style="font-size: 1.3em; color: darkblue; border-bottom: 1px solid darkblue;">Projects</h2>
+        <section id="skills">
+            <h2>Skills</h2>
             <ul>
-                <li><a href="https://www.bcbrookman.com/">Azure Cloud Resume Challenge</a></li>
+                <li>Ansible</li>
+                <li>CI/CD</li>
+                <li>Terraform</li>
+                <li>Load Balancing/Proxies</li>
+                <li>Troubleshooting</li>
+                <li>TCP/IP Protocols</li>
+                <li>Amazon Web Services</li>
+                <li>Microsoft Azure</li>
+                <li>Bash</li>
+                <li>GitHub</li>
+                <li>Go/Golang</li>
+                <li>Python</li>
+                <li>Kubernetes</li>
+                <li>Routing/Switching</li>
+                <li>Linux Administration</li>
             </ul>
         </section>
-
-        <!-- Experience -->
-        <section>
-            <h2 style="font-size: 1.3em; color: darkblue; color: darkblue; border-bottom: 1px solid darkblue;">Experience</h2>
-            <div>
-                <div>
-                    <div>
-                        <div><strong>Sr. IT Engineer, Load Balancing</strong></div>
-                        <div>Kaiser Permanente</div>
-                    </div>
-                    <div>2022 – Present</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Certifications -->
-        <section>
-            <h2 style="font-size: 1.3em; color: darkblue; color: darkblue; border-bottom: 1px solid darkblue;">Certifications</h2>
+        <section id="projects">
+            <h2>Projects</h2>
             <ul>
-                <li>Microsoft Certified: Azure Fundamentals</li>
+                <li><a href="https://github.com/bcbrookman/homeops">HomeOps</a>: My home infrastructure and Kubernetes cluster, deployed as code using Terraform, Ansible, and Flux CD.</li><li><a href="https://github.com/bcbrookman/terraform-aws-kubeadm-k8s">AWS Kubeadm Terraform Module</a>: A Terraform module for creating Kubeadm-based Kubernetes clusters on AWS EC2.</li><li><a href="https://github.com/bcbrookman/cloud-resume">Cloud Resume</a>: My Azure hosted resume website based on The Cloud Resume Challenge.</li><li><a href="https://github.com/bcbrookman/ansible-role-duplicati">Duplicati Ansible Role</a>: An Ansible role to install the Duplicati backup client on Linux systems.</li><li><a href="https://github.com/bcbrookman/pbing">Pbing</a>: An enhanced ping utility written in Go using the pro-bing library.</li><li><a href="https://github.com/bcbrookman/docker-buoy">Docker Buoy</a>: A containerized Python web app used for load balancer testing and demos.</li>
             </ul>
         </section>
-
-        <!-- Education -->
-        <section>
-            <h2 style="font-size: 1.3em; color: darkblue; color: darkblue; border-bottom: 1px solid darkblue;">Education</h2>
-            <div>
-                <div><strong>A.S. Computer Networking, Admin, and Security Management</strong></div>
-                <div>Mt. San Antonio College, 2014</div>
-            </div>
+        <section id="experience">
+            <h2>Experience</h2>
+            <h3>Senior IT Engineer, Load Balancing</h3>
+            <span class="dated-line">
+                <span>Contracted via Rose International Inc.</span>
+                <span>2025 – Present</span>
+            </span>
+            <span class="dated-line">
+                <span>Kaiser Permanente, Corona, CA</span>
+                <span>2022 – 2025</span>
+            </span>
+            <ul>
+                <li>Provided enterprise application delivery services through a large deployment of over 100 F5 BIG-IP LTM, GTM/DNS, and BlueCat DDI appliances.</li>
+                <li>Was recognized for "deep technical knowledge and remarkable patience" during a 2 year migration project to Apigee Hybrid on Azure Kubernetes Service (AKS) and RedHat OpenShift.</li>
+                <li>Supported application teams on over 928 F5 Load Balancing requests for troubleshooting, consultation, and change implementations.</li>
+                <li>Frequently led troubleshooting on major incident bridges, created documentation, and developed Python and Bash tools/scripts</li>
+                <li>Completed over 140 24x7 on-call shifts as Tier 3 support which included responding to infrastructure alerts, joining major incident bridges, and performing after-hours change implementations.</li>
+            </ul>
+            <h3>IT Engineer, Network Operations</h3>
+            <span class="dated-line">
+                <span>Kaiser Permanente, Corona, CA</span>
+                <span>2017 – 2022</span>
+            </span>
+            <ul>
+                <li>Drove network incident resolution in tandem with managed service providers and internal support teams.</li>
+                <li>Troubleshot Palo Alto firewall traffic flows and rules to maintain stable and secure connectivity.</li>
+                <li>Was one of 9 hackathon winners in 2022 for proposing a GitOps approach to Aruba ClearPass Static Host List changes which leveraged GitHub, Jenkins, and the ClearPass API.</li>
+                <li>Provided in-depth analysis of packet captures and logs utilizing Wireshark and Splunk Enterprise.</li>
+                <li>Was one of 6 hackathon winners in 2018 for a Python Django web app which enabled search and bulk provisioning of Aruba Remote Access Points (RAPs) leveraging the Aruba Activate API.</li>
+                <li>Later deployed the app using Docker Swarm where it received over 400 daily requests and helped the Service Desk resolve Aruba RAP incidents at first level.</li>
+            </ul>
+            <h3>Associate IT Support Technician</h3>
+            <span class="dated-line">
+                <span>Kaiser Permanente, Corona, CA</span>
+                <span>2015 – 2017</span>
+            </span>
+            <span class="dated-line">
+                <span>Contracted via Rose International Inc.</span>
+                <span>2013 – 2015</span>
+            </span>
+            <ul>
+                <li>Provided end user support for a wide range of desktop, web, and infrastructure applications on the enterprise service desk.</li>
+                <li>Was awarded the End User Services Subject Matter Expert Award in 2017 for exemplary performance.</li>
+                <li>Handled over 60 calls per day, while maintaining a first-contact resolution rate of over 70%.</li>
+                <li>Developed Windows Batch and PowerShell scripts to automate fixes for commonly reported problems, and gather workstation details for inventory and upgrades.</li>
+            </ul>
+            <h3>Photographer & Production Assistant</h3>
+            <span class="dated-line">
+                <span>Brighton Collectibles, City of Industry, CA</span>
+                <span>2011 – 2013</span>
+            </span>
+            <ul>
+                <li>Worked in the company’s eCommerce web department, creating/editing graphics and performing various web design/development tasks supporting the company’s website and email campaigns.</li>
+                <li>Proposed critical changes to file permissions and management of the department’s shared drive.</li>
+            </ul>
         </section>
-    </div>
-
+        <section id="certifications">
+            <h2>Certifications</h2>
+            <h3>Amazon Web Services</h3>
+            <ul>
+                <li class="dated-line">
+                    <span>AWS Certified Cloud Practitioner</span>
+                    <span>Expires Jul 2027</span>
+                </li><li class="dated-line">
+                    <span>AWS Certified AI Practitioner</span>
+                    <span>Expires Jul 2028</span>
+                </li>
+            </ul>
+            <h3>Cloud Native Computing Foundation</h3>
+            <ul>
+                <li class="dated-line">
+                    <span>Kubernetes and Cloud Native Security Associate (KCSA)</span>
+                    <span>Expires Jun 2027</span>
+                </li><li class="dated-line">
+                    <span>Certified Kubernetes Security Specialist (CKS)</span>
+                    <span>Expires Jul 2027</span>
+                </li><li class="dated-line">
+                    <span>Certified Kubernetes Adminstrator (CKA)</span>
+                    <span>Expires Mar 2027</span>
+                </li><li class="dated-line">
+                    <span>Certified Kubernetes Application Developer (CKAD)</span>
+                    <span>Expires Apr 2027</span>
+                </li><li class="dated-line">
+                    <span>Kubernetes and Cloud Native Associate (KCNA)</span>
+                    <span>Expires Feb 2027</span>
+                </li>
+            </ul>
+            <h3>Linux Professional Institute</h3>
+            <ul>
+                <li class="dated-line">
+                    <span>Linux Essentials Certification</span>
+                    <span>No Expiration</span>
+                </li>
+            </ul>
+            <h3>Microsoft Corporation</h3>
+            <ul>
+                <li class="dated-line">
+                    <span>Microsoft Certified: Azure Fundamentals</span>
+                    <span>No Expiration</span>
+                </li>
+            </ul>
+        </section>
+        <section id="education">
+            <h2>Education</h2>
+            <h3>A.S. Degree in Computer Networking, Administration, & Security Management</h3>
+            <span class="dated-line">Mt. San Antonio College, Walnut, CA</span>
+            <ul>
+                <li>Completed degree coursework which included Cisco Networking, Windows Server Security, Network Vulnerabilities, Firewall, and IDS/IPS administration.</li>
+                <li>Vice-President of the Computer Information Systems (CIS) Club and a member of the college's Cyber-defense team which competed in the NCL Competition, received 1st place in a WRCCDC invitational, and took 1st place in a CSSIA CyberWars competition.</li>
+            </ul>
+            <h3>A.S. Degree in Computer Programming</h3>
+            <span class="dated-line">Mt. San Antonio College, Walnut, CA</span>
+            <ul>
+                <li>Coursework included systems analysis and design principles, software development lifecycle and methodologies, programming in C++, and object-oriented design principles.</li>
+            </ul>
+            <h3>A.S. Degree in Database Management</h3>
+            <span class="dated-line">Mt. San Antonio College, Walnut, CA</span>
+            <ul>
+                <li>In addition to programming and software development principles, coursework included database design, Oracle, and Microsoft SQL database administration.</li>
+            </ul>
+            <h3>Cisco Network Academy</h3>
+            <span class="dated-line">Chaffey College, Rancho Cucamonga, CA</span>
+            <ul>
+                <li>Member of the college’s cyber security competition team which scored 1st place in service uptime in a WRCCDC qualifier event.</li>
+                <li>Completed Cisco Network Academy coursework in preparation for CCNA and CCNP Routing and Switching certifications.</li>
+                <li>Participated in the Cisco NetRiders CCNA competition and progressed to the North American finals round.</li>
+            </ul>
+        </section>
+        </div>
     <script>
     async function update_visitor_counter(method='GET'){
         try{
@@ -93,9 +203,8 @@
         update_visitor_counter('POST');
     });
     </script>
-
-    <footer style="text-align: center; margin-top: 2em; color: grey;">
-        Visitors: <span id="visitor-count">---</span>
+    <footer>
+        Visitors: <span id="visitor-count">----</span>
     </footer>
 </body>
 </html>

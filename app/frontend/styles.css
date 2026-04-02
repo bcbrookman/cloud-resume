@@ -1,0 +1,140 @@
+body {
+  background-color: lightgrey;
+  color: black;
+  font-family: "Bitter", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: 400;
+  text-align: justify;
+  line-height: 1.5;
+}
+
+a {
+  color: #377BB5;
+  font-weight: 500;
+}
+
+ul  {
+  margin-left: 0;
+  padding-left: 1.5em;
+}
+
+h1, h2, h3 {
+  color: #377BB5;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.3em;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+h3 {
+  font-size: 1em;
+  text-transform: none;
+}
+
+#resume-container {
+  background-color: white;
+  max-width: 900px;
+  margin: 2em auto;
+  padding: 1em 1em;
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+header {
+  text-align: center;
+}
+
+header h1 {
+  text-align: center;
+}
+
+header ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0.2em 0;
+  font-size: 1.5em;
+}
+
+header ul li {
+  margin: auto 0.5em;
+}
+
+header ul li ins {
+  display: none;
+}
+
+#skills ul {
+  display: inline-flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+#skills ul li {
+  flex-grow: 1;
+  list-style: none;
+  text-align: center;
+  background-color: rgb(221, 242, 248);
+  border-radius: 1em;
+  padding: 0.3em;
+  margin: 0.3em;
+}
+
+.dated-line {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  font-style: italic;
+}
+
+footer {
+  text-align: center;
+  margin-bottom: 2em;
+  color: grey;
+}
+
+@media screen and (width >= 600px) {
+  #resume-container {
+    padding: 1em 3em;
+  }
+  header ul {
+    font-size: inherit;
+  }
+  header ul li {
+    margin: auto 0;
+  }
+  header ul li ins {
+    display: inline;
+  }
+  header ul li:not(:last-child)::after {
+    content: "\0000a0|\0000a0";
+  }
+}
+
+@media print {
+  body {
+    background-color: white;
+    color: black;
+  }
+  #resume-container {
+    box-shadow: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+}
