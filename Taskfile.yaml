@@ -1,0 +1,72 @@
+---
+version: '3'
+
+run: once
+
+env:
+  PIP_OPTS: "--no-input --no-cache-dir --root-user-action=ignore --prefer-binary --upgrade"
+
+tasks:
+  default:
+    cmds: [task --list]
+    silent: true
+
+  deps:azcli:
+    desc: Install Azure CLI
+    cmds:
+      - >
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    status:
+      - which az
+
+  deps:pre-commit:
+    desc: Install pre-commit
+    cmds:
+      - pip install {{.PIP_OPTS}} pre-commit
+      - pre-commit install || echo "Could not install pre-commit hooks!"
+    status:
+      - python -c "import pkg_resources; pkg_resources.require('pre-commit')"
+      - test -f .git/hooks/pre-commit
+
+  deps:python:
+    desc: Install Python dependencies
+    cmds:
+      - pip install {{.PIP_OPTS}} -r app/api/requirements.txt -r app/api/requirements-dev.txt
+    status:
+      - python -c "import pkg_resources; pkg_resources.require(open('app/api/requirements.txt',mode='r'))"
+      - python -c "import pkg_resources; pkg_resources.require(open('app/api/requirements-dev.txt',mode='r'))"
+
+  test:bicep:lint:
+    desc: Run Bicep lint tests
+    deps:
+      - deps:azcli
+    cmds:
+      - az bicep lint --file infra/bicep/main.bicep
+
+  test:pre-commit:
+    desc: Run pre-commit tests
+    deps:
+      - deps:pre-commit
+    cmds:
+      - pre-commit run --all-files
+
+  test:pytest:
+    desc: Run pytest tests
+    deps:
+      - deps:python
+    cmds:
+      - pytest -v app/api
+
+  test:static:
+    desc: Run all static tests
+    cmds:
+      - task: test:pre-commit
+      - task: test:bicep:lint
+      - task: test:pytest
+
+  test:all:
+    desc: Run all tests
+    aliases:
+      - test
+    cmds:
+      - task: test:static
