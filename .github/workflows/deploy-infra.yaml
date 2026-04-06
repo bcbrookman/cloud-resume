@@ -1,0 +1,64 @@
+---
+name: Deploy Infra
+
+on:
+  workflow-dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "infra/**"
+
+concurrency:
+  group: infra
+  cancel-in-progress: true
+
+env:
+  AZURE_CORE_OUTPUT: none
+
+jobs:
+  setup-devcontainer:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repo at current context
+      uses: actions/checkout@v6
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Pre-build devcontainer image
+      uses: devcontainers/ci@v0.3
+      with:
+        imageName: ghcr.io/bcbrookman/cloud-resume-cicd
+        cacheFrom: ghcr.io/bcbrookman/cloud-resume-cicd
+
+  deploy-infra:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/bcbrookman/cloud-resume-cicd
+
+    env:
+      AZURE_CORE_OUTPUT: none
+
+    steps:
+      - name: Checkout repo at current context
+        uses: actions/checkout@v6
+
+      - name: Azure login
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy infra
+        run: task deploy:infra ENV=prd
