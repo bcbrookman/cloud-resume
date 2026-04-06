@@ -3,8 +3,9 @@ version: '3'
 
 run: once
 
-env:
+vars:
   PIP_OPTS: "--no-input --no-cache-dir --root-user-action=ignore --prefer-binary --upgrade"
+  ENV: '{{.ENV | default "dev" }}'
 
 tasks:
   default:
@@ -15,7 +16,9 @@ tasks:
     desc: Install Azure CLI
     cmds:
       - >
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg
+        | gpg --dearmor > /usr/share/keyrings/yarn-archive-keyring.gpg
+      - curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
     status:
       - which az
 
@@ -70,3 +73,70 @@ tasks:
       - test
     cmds:
       - task: test:static
+
+  dotenv:stacctname:
+    cmds:
+      - |
+        STACCTNAME=$(az resource list \
+        --resource-group cloudresume-{{.ENV|lower}}-rg \
+        --resource-type Microsoft.Storage/storageAccounts \
+        --query "[*].name" -o tsv \
+        | grep 'crstat{{.ENV|lower}}')
+        echo "STACCTNAME=${STACCTNAME}" >> .env.{{.ENV}}
+    status:
+      - grep 'STACCTNAME=' .env.{{.ENV}}
+
+  deploy:app:api:
+    desc: Deploy Azure Functions App
+    preconditions:
+      - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
+    cmds:
+      - >
+        az functionapp config appsettings set
+        --resource-group cloudresume-{{.ENV|lower}}-rg
+        --name cloudresume-{{.ENV|lower}}-func
+        --settings @app/api/env/local.values.{{.ENV|lower}}.json
+      - >
+        zip app/cloudresume-{{.ENV|lower}}-func.zip app/api/host.json
+        app/api/function_app.py app/api/requirements.txt -j
+      - >
+        az functionapp deployment source config-zip
+        --resource-group cloudresume-{{.ENV|lower}}-rg
+        --name cloudresume-{{.ENV|lower}}-func
+        --src app/cloudresume-{{.ENV|lower}}-func.zip
+
+  deploy:app:frontend:
+    desc: Deploy frontend static site content
+    preconditions:
+      - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
+    dotenv:
+      - .env.{{.ENV|lower}}
+    deps:
+      - dotenv:stacctname
+    cmds:
+      - >
+        az storage blob upload-batch
+        --overwrite
+        --source 'app/frontend'
+        --destination '$web'
+        --account-name "${STACCTNAME}"
+
+  deploy:infra:
+    desc: Deploy infrastructure code
+    preconditions:
+      - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
+    cmds:
+      - >
+        az deployment group create
+        --resource-group cloudresume-{{.ENV|lower}}-rg
+        --template-file infra/bicep/main.bicep
+        --parameters infra/bicep/env/{{.ENV|lower}}.bicepparam
+
+  deploy:all:
+    desc: Deploy all infra and app components
+    preconditions:
+      - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
+    cmds:
+      - task: deploy:infra
+      - task: deploy:app:frontend
+      - task: deploy:app:api

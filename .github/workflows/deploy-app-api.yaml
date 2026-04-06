@@ -1,0 +1,71 @@
+---
+name: Deploy App API
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "app/api/**"
+
+concurrency:
+  group: app-api
+  cancel-in-progress: true
+
+env:
+  AZURE_CORE_OUTPUT: none
+
+jobs:
+  setup-devcontainer:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repo at current context
+      uses: actions/checkout@v6
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Pre-build devcontainer image
+      uses: devcontainers/ci@v0.3
+      with:
+        imageName: ghcr.io/bcbrookman/cloud-resume-cicd
+        cacheFrom: ghcr.io/bcbrookman/cloud-resume-cicd
+
+  deploy-app-api:
+    needs: setup-devcontainer
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/bcbrookman/cloud-resume-cicd
+
+    steps:
+      - name: Checkout repo at current context
+        uses: actions/checkout@v6
+
+      - name: Create environment settings file
+        run: |
+          mkdir -p app/api/env/
+          jq -n \
+          --arg DEPLOYMENT_STORAGE_CONNECTION_STRING "${{ secrets.DEPLOYMENT_STORAGE_CONNECTION_STRING }}" \
+          --arg CosmosDBConnection "${{ secrets.CosmosDBConnection }}" \
+          '{
+            DEPLOYMENT_STORAGE_CONNECTION_STRING: $DEPLOYMENT_STORAGE_CONNECTION_STRING,
+            CosmosDBConnection: $CosmosDBConnection
+          }' > app/api/env/local.values.prd.json
+
+      - name: Azure login
+        uses: azure/login@v3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy function app
+        run: task deploy:app:api ENV=prd
