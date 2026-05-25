@@ -1,5 +1,9 @@
-*.zip
+# Project specific ignores
 .env.*
+.task
+*.zip
+bicep-output.*.json
+Pulumi.*.y?ml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

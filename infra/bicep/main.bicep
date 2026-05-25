@@ -5,14 +5,8 @@ param environment string
 @description('Azure region into which all resources will be deployed.')
 param location string = resourceGroup().location
 
-@description('Name of the DNS zone for the custom domain')
-param dnsZoneName string = toLower('resume-${environment}.bcbrookman.com')
-
-@description('Name of the customDomain resource used by the edge')
-param edgeCustomDomainResourceName string = toLower(replace('${dnsZoneName}-customdomain', '.', '-'))
-
-@description('Name of the Azure Front Door instance')
-param frontDoorName string = toLower('cloudresume-${environment}-afd')
+@description('Name of the Fqdn zone for the custom domain')
+param domainName string = toLower('resume-${environment}.bcbrookman.com')
 
 @minLength(3)
 @maxLength(24)
@@ -33,17 +27,6 @@ param functionAppStorageAccountName string = toLower('crfunc${environment}st${un
 @description('Name of the Cosmos DB account')
 param databaseAccountName string = toLower('cloudresume-${environment}-cosmos')
 
-
-module edge './modules/edge.bicep' = {
-  name: 'cloudResumeEdgeModule'
-  params: {
-    customDomainResourceName: edgeCustomDomainResourceName
-    dnsZoneName: dnsZoneName
-    frontDoorName: frontDoorName
-    storageEndpoint: staticSite.outputs.staticSiteEndpoint
-  }
-}
-
 module staticSite './modules/staticSite.bicep' = {
   name: 'cloudResumeStaticSiteModule'
   params: {
@@ -55,12 +38,12 @@ module staticSite './modules/staticSite.bicep' = {
 module api './modules/api.bicep' = {
   name: 'cloudResumeApiModule'
   params: {
-    dnsZoneName: dnsZoneName
-    edgeEndpointDNS: edge.outputs.endpointDNS
+    domainName: domainName
     functionAppName: functionAppName
     functionAppServicePlanName: functionAppServicePlanName
     functionAppStorageAccountName: functionAppStorageAccountName
     location: location
+    staticSiteWebEndpointFqdn: staticSite.outputs.staticSiteWebEndpointFqdn
   }
 }
 
@@ -71,3 +54,10 @@ module data './modules/data.bicep' = {
     location: location
   }
 }
+
+output frontendEdgeFqdn string = domainName
+output frontendEdgeVerifyFqdn string = 'asverify.${staticSite.outputs.staticSiteBlobEndpointFqdn}'
+output frontendOriginFqdn string = staticSite.outputs.staticSiteWebEndpointFqdn
+output apiEdgeFqdn string = api.outputs.apiSiteCustomFqdn
+output apiEdgeFqdnVerifyTxt string = api.outputs.apiSiteCustomFqdnVerifyTxt
+output apiOriginFqdn string = api.outputs.apiSiteDefaultFqdn

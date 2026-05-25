@@ -1,0 +1,10 @@
+name: cloud-resume-edge
+description: Edge infra for my cloud-hosted resume
+runtime:
+  name: python
+  options:
+    toolchain: pip
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: python

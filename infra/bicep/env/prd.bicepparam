@@ -2,4 +2,4 @@ using '../main.bicep'
 
 param environment = 'prd'
 
-param dnsZoneName = 'resume.bcbrookman.com'
+param domainName = 'resume.bcbrookman.com'

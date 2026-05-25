@@ -41,7 +41,7 @@ jobs:
         imageName: ghcr.io/bcbrookman/cloud-resume-cicd
         cacheFrom: ghcr.io/bcbrookman/cloud-resume-cicd
 
-  deploy-app-api:
+  deploy-app-frontend:
     needs: setup-devcontainer
     runs-on: ubuntu-latest
     container:
@@ -60,6 +60,4 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy static site
-        run: |
-             task dotenv:stacctname ENV=prd
-             task deploy:app:frontend ENV=prd
+        run: task deploy:app:frontend ENV=prd

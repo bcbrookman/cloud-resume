@@ -1,8 +1,8 @@
 param functionAppName string
 param functionAppServicePlanName string
 param functionAppStorageAccountName string
-param dnsZoneName string
-param edgeEndpointDNS string
+param domainName string
+param staticSiteWebEndpointFqdn string
 param location string
 
 
@@ -99,24 +99,6 @@ resource plan 'Microsoft.Web/serverfarms@2024-11-01' = {
     targetWorkerSizeId: 0
     zoneRedundant: false
     asyncScalingEnabled: false
-  }
-}
-
-resource dnsZone 'Microsoft.Network/dnszones@2023-07-01-preview' existing = {
-  name: dnsZoneName
-
-}
-
-resource apiDNS 'Microsoft.Network/dnszones/CNAME@2023-07-01-preview' = {
-  parent: dnsZone
-  name: 'api'
-  properties: {
-    TTL: 3600
-    CNAMERecord: {
-      cname: site.properties.defaultHostName
-    }
-    targetResource: {}
-    trafficManagementProfile: {}
   }
 }
 
@@ -230,8 +212,8 @@ resource siteConfig 'Microsoft.Web/sites/config@2024-11-01' = {
     publicNetworkAccess: 'Enabled'
     cors: {
       allowedOrigins: [
-        'https://${dnsZoneName}'
-        'https://${edgeEndpointDNS}'
+        'https://${domainName}'
+        'https://${staticSiteWebEndpointFqdn}'
       ]
       supportCredentials: false
     }
@@ -268,10 +250,6 @@ resource siteConfig 'Microsoft.Web/sites/config@2024-11-01' = {
   }
 }
 
-resource hostNameBinding 'Microsoft.Web/sites/hostNameBindings@2024-11-01' = {
-  parent: site
-  name: 'api.${dnsZoneName}'
-  properties: {
-    siteName: functionAppName
-  }
-}
+output apiSiteDefaultFqdn string = site.properties.defaultHostName
+output apiSiteCustomFqdn string = 'api.${domainName}'
+output apiSiteCustomFqdnVerifyTxt string = site.properties.customDomainVerificationId
