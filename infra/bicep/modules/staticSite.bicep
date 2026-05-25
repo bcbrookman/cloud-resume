@@ -1,6 +1,7 @@
 param location string
 param staticSiteName string
 
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2025-06-01' = {
   name: staticSiteName
   location: location
@@ -145,4 +146,5 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
   }
 }
 
-output staticSiteEndpoint string = storageAccount.properties.primaryEndpoints.web
+output staticSiteBlobEndpointFqdn string = replace(replace(storageAccount.properties.primaryEndpoints.blob, 'https://', ''), '/', '')
+output staticSiteWebEndpointFqdn string = replace(replace(storageAccount.properties.primaryEndpoints.web, 'https://', ''), '/', '')

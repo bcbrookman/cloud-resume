@@ -15,7 +15,7 @@ tasks:
   deps:azcli:
     desc: Install Azure CLI
     cmds:
-      - >
+      - >-
         curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg
         | gpg --dearmor > /usr/share/keyrings/yarn-archive-keyring.gpg
       - curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -34,10 +34,15 @@ tasks:
   deps:python:
     desc: Install Python dependencies
     cmds:
-      - pip install {{.PIP_OPTS}} -r app/api/requirements.txt -r app/api/requirements-dev.txt
+      - >-
+        pip install {{.PIP_OPTS}}
+        -r app/api/requirements.txt
+        -r app/api/requirements-dev.txt
+        -r infra/pulumi/requirements.txt
     status:
       - python -c "import pkg_resources; pkg_resources.require(open('app/api/requirements.txt',mode='r'))"
       - python -c "import pkg_resources; pkg_resources.require(open('app/api/requirements-dev.txt',mode='r'))"
+      - python -c "import pkg_resources; pkg_resources.require(open('infra/pulumi/requirements.txt',mode='r'))"
 
   test:bicep:lint:
     desc: Run Bicep lint tests
@@ -74,63 +79,125 @@ tasks:
     cmds:
       - task: test:static
 
-  dotenv:stacctname:
+  dotenv:stacct:
     cmds:
-      - |
-        STACCTNAME=$(az resource list \
+      - |-
+        STACCT=$(az resource list \
         --resource-group cloudresume-{{.ENV|lower}}-rg \
         --resource-type Microsoft.Storage/storageAccounts \
         --query "[*].name" -o tsv \
         | grep 'crstat{{.ENV|lower}}')
-        echo "STACCTNAME=${STACCTNAME}" >> .env.{{.ENV}}
+        echo "STACCT=${STACCT}" >> .env.{{.ENV}}
     status:
-      - grep 'STACCTNAME=' .env.{{.ENV}}
+      - grep 'STACCT=' .env.{{.ENV}}
+
+  dotenv:domain:
+    cmds:
+      - >-
+        case '{{.ENV|lower}}' in
+        prd) echo "DOMAIN=resume.bcbrookman.com" >> .env.{{.ENV}} ;;
+        *) echo "DOMAIN=resume-{{.ENV|lower}}.bcbrookman.com" >> .env.{{.ENV}} ;;
+        esac
+    status:
+      - grep 'DOMAIN=' .env.{{.ENV}}
 
   deploy:app:api:
     desc: Deploy Azure Functions App
     preconditions:
       - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
     cmds:
-      - >
+      - >-
         az functionapp config appsettings set
         --resource-group cloudresume-{{.ENV|lower}}-rg
         --name cloudresume-{{.ENV|lower}}-func
         --settings @app/api/env/local.values.{{.ENV|lower}}.json
-      - >
+        > /dev/null
+      - >-
         zip app/cloudresume-{{.ENV|lower}}-func.zip app/api/host.json
         app/api/function_app.py app/api/requirements.txt -j
-      - >
+        > /dev/null
+      - >-
         az functionapp deployment source config-zip
         --resource-group cloudresume-{{.ENV|lower}}-rg
         --name cloudresume-{{.ENV|lower}}-func
         --src app/cloudresume-{{.ENV|lower}}-func.zip
+        > /dev/null
 
   deploy:app:frontend:
     desc: Deploy frontend static site content
     preconditions:
       - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
-    dotenv:
-      - .env.{{.ENV|lower}}
     deps:
-      - dotenv:stacctname
+      - dotenv:stacct
     cmds:
-      - >
+      - >-
+        source .env.{{.ENV|lower}} &&
         az storage blob upload-batch
         --overwrite
         --source 'app/frontend'
         --destination '$web'
-        --account-name "${STACCTNAME}"
+        --account-name "${STACCT}"
+        > /dev/null
 
-  deploy:infra:
-    desc: Deploy infrastructure code
+  deploy:infra:bicep:
+    desc: Deploy infrastructure Bicep code
     preconditions:
       - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
+    sources:
+      - infra/bicep/**
+    generates:
+      - infra/bicep-output.{{.ENV|lower}}.json
     cmds:
-      - >
+      - >-
         az deployment group create
         --resource-group cloudresume-{{.ENV|lower}}-rg
         --template-file infra/bicep/main.bicep
         --parameters infra/bicep/env/{{.ENV|lower}}.bicepparam
+        > infra/bicep-output.{{.ENV|lower}}.json
+
+  deploy:infra:pulumi:
+    desc: Deploy infrastructure Pulumi code
+    preconditions:
+      - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
+    deps:
+      - deploy:infra:bicep
+    dir: infra/pulumi/
+    cmds:
+      - pulumi stack select {{.ENV|lower}}
+      - test -f Pulumi.{{.ENV|lower}}.yaml || pulumi config refresh
+      - pulumi up --yes
+
+  deploy:infra:customdomains:
+    desc: Apply custom domains to infrastructure resources
+    preconditions:
+      - case '{{.ENV|lower}}' in dev|prd) true ;; *) false ;; esac
+    deps:
+      - dotenv:domain
+      - dotenv:stacct
+    cmds:
+      - >-
+        source .env.{{.ENV|lower}} &&
+        az webapp config hostname add
+        --resource-group "cloudresume-{{.ENV|lower}}-rg"
+        --webapp-name "cloudresume-{{.ENV|lower}}-func"
+        --hostname "api.${DOMAIN}"
+        > /dev/null
+      - >-
+        source .env.{{.ENV|lower}} &&
+        az storage account update
+        --name "${STACCT}"
+        --custom-domain "${DOMAIN}"
+        --use-subdomain "true"
+        > /dev/null
+
+  deploy:infra:
+    desc: Deploy infrastructure code
+    aliases:
+      - deploy:infra
+    cmds:
+      - task: deploy:infra:bicep
+      - task: deploy:infra:pulumi
+      - task: deploy:infra:customdomains
 
   deploy:all:
     desc: Deploy all infra and app components

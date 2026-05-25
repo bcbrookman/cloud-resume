@@ -58,3 +58,5 @@ jobs:
 
       - name: Deploy infra
         run: task deploy:infra ENV=prd
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
