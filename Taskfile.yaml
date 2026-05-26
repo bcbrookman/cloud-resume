@@ -111,17 +111,14 @@ tasks:
         --resource-group cloudresume-{{.ENV|lower}}-rg
         --name cloudresume-{{.ENV|lower}}-func
         --settings @app/api/env/local.values.{{.ENV|lower}}.json
-        > /dev/null
       - >-
         zip app/cloudresume-{{.ENV|lower}}-func.zip app/api/host.json
         app/api/function_app.py app/api/requirements.txt -j
-        > /dev/null
       - >-
         az functionapp deployment source config-zip
         --resource-group cloudresume-{{.ENV|lower}}-rg
         --name cloudresume-{{.ENV|lower}}-func
         --src app/cloudresume-{{.ENV|lower}}-func.zip
-        > /dev/null
 
   deploy:app:frontend:
     desc: Deploy frontend static site content
@@ -137,7 +134,6 @@ tasks:
         --source 'app/frontend'
         --destination '$web'
         --account-name "${STACCT}"
-        > /dev/null
 
   deploy:infra:bicep:
     desc: Deploy infrastructure Bicep code
@@ -153,7 +149,8 @@ tasks:
         --resource-group cloudresume-{{.ENV|lower}}-rg
         --template-file infra/bicep/main.bicep
         --parameters infra/bicep/env/{{.ENV|lower}}.bicepparam
-        > infra/bicep-output.{{.ENV|lower}}.json
+        --output json > infra/bicep-output.{{.ENV|lower}}.json
+      # '--output json' needed in because AZURE_CORE_OUTPUT='none' in CI
 
   deploy:infra:pulumi:
     desc: Deploy infrastructure Pulumi code
@@ -181,14 +178,12 @@ tasks:
         --resource-group "cloudresume-{{.ENV|lower}}-rg"
         --webapp-name "cloudresume-{{.ENV|lower}}-func"
         --hostname "api.${DOMAIN}"
-        > /dev/null
       - >-
         source .env.{{.ENV|lower}} &&
         az storage account update
         --name "${STACCT}"
         --custom-domain "${DOMAIN}"
         --use-subdomain "true"
-        > /dev/null
 
   deploy:infra:
     desc: Deploy infrastructure code

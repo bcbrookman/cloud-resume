@@ -7,9 +7,9 @@ import pulumi_cloudflare as cloudflare
 
 config = pulumi.Config()
 zone_id = config.require_secret("zoneId")
+bicep_file = f"../bicep-output.{config.require('environment')}.json"
 
-
-with open(f"../bicep-output.{config.require('environment')}.json", "r") as f:
+with open(bicep_file, "r") as f:
     bicep_output = json.load(f)
     frontend_edge_fqdn = bicep_output['properties']['outputs']['frontendEdgeFqdn']['value']
     frontend_edge_verify_fqdn = bicep_output['properties']['outputs']['frontendEdgeVerifyFqdn']['value']
