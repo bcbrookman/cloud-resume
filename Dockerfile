@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:3.13@sha256:c6586000d784e1082807570db10e6f392f54f9706ee6baaf87d558f301615c7a
+FROM mcr.microsoft.com/devcontainers/python:3.13@sha256:3d68402c7f3eb28f3d75f8095e2d3ddbfbbd33c6e1ece9f9f5da61afed230ef6
 
 LABEL org.opencontainers.image.title="cloud-resume-cicd"
 LABEL org.opencontainers.image.description="Development container for bcbrookman/cloud-resume"
